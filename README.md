@@ -174,6 +174,145 @@ The dual-analysis architecture demonstrates:
 
 ---
 
+## Technical Strength & Smart Contract Implementation
+
+### Blockchain Architecture
+
+The system demonstrates enterprise-level **smart contract development** with production-ready security features:
+
+#### **MMYRCToken Contract** ([Etherscan](https://sepolia.etherscan.io/address/0x61B6056de59844cBc3A4eC44963D9619e4914F20))
+```solidity
+contract MMYRCToken is ERC20, Ownable, Pausable {
+    uint256 public constant MAX_SUPPLY = 1000000 * 1e18; // Supply cap
+
+    function mint(address to, uint256 amount) external onlyOwner whenNotPaused {
+        require(totalSupply() + amount <= MAX_SUPPLY, "Exceeds max supply");
+        _mint(to, amount);
+    }
+}
+```
+
+**Key Features:**
+- ✅ **ERC-20 Compliance** with OpenZeppelin standards
+- ✅ **Supply Management** with 1M token maximum cap
+- ✅ **Access Control** via Ownable pattern
+- ✅ **Emergency Controls** with Pausable functionality
+- ✅ **Event Logging** for transparency and audit trails
+
+#### **SubsidyClaim Contract** ([Etherscan](https://sepolia.etherscan.io/address/0xeF79df53ae0d09b0219da032170Bf9F502d94009))
+```solidity
+contract SubsidyClaim is Ownable, Pausable, ReentrancyGuard {
+    mapping(address => uint256) public allocations;
+    mapping(address => bool) public hasClaimed;
+
+    function claimTokens() external nonReentrant whenNotPaused
+        onlyDuringClaimPeriod hasAllocation(msg.sender) hasNotClaimed(msg.sender) {
+        // Secure token distribution logic
+    }
+}
+```
+
+**Advanced Security Features:**
+- ✅ **Reentrancy Protection** via ReentrancyGuard
+- ✅ **Double-Claim Prevention** with state tracking
+- ✅ **Time-Based Controls** with claim period management
+- ✅ **Batch Operations** for efficient administration
+- ✅ **Emergency Recovery** mechanisms for unclaimed tokens
+
+#### **Smart Contract Security Analysis**
+
+| Security Feature | Implementation | Purpose |
+|------------------|----------------|---------|
+| **Access Control** | OpenZeppelin Ownable | Restrict admin functions |
+| **Reentrancy Guard** | ReentrancyGuard modifier | Prevent attack vectors |
+| **Supply Management** | MAX_SUPPLY constant | Prevent token inflation |
+| **Pause Mechanism** | Pausable contract | Emergency response |
+| **Safe Transfers** | SafeERC20 library | Prevent token loss |
+| **Input Validation** | Require statements | Data integrity |
+
+### Frontend Web3 Integration
+
+The system showcases **modern Web3 development** with TypeScript and React:
+
+```typescript
+// Real-time blockchain integration
+const { data: allocation } = useContractRead({
+  address: CONTRACT_ADDRESSES.SUBSIDY_CLAIM,
+  abi: subsidyClaimABI,
+  functionName: 'allocations',
+  args: [address],
+  watch: true
+});
+
+// Secure transaction handling
+const { write: claimTokens } = useContractWrite({
+  address: CONTRACT_ADDRESSES.SUBSIDY_CLAIM,
+  abi: subsidyClaimABI,
+  functionName: 'claimTokens',
+  onSuccess: () => toast.success('Tokens claimed successfully!')
+});
+```
+
+**Technical Stack Highlights:**
+- ✅ **Wagmi v2** for type-safe Ethereum interactions
+- ✅ **RainbowKit** for comprehensive wallet support
+- ✅ **Viem** for optimized blockchain operations
+- ✅ **Real-time State** with automatic contract watching
+- ✅ **Transaction Management** with status tracking
+- ✅ **Error Handling** with user-friendly feedback
+
+### Deployment & Production Readiness
+
+**Testnet Deployment Statistics:**
+- **Network**: Sepolia Testnet (production-equivalent)
+- **Total Supply**: 1,000,000 MMYRC tokens (max cap)
+- **Deployed Tokens**: 100,000 MMYRC (10% initial)
+- **Active Allocations**: 10 citizens × 1,000 tokens each
+- **Gas Optimization**: Batch operations for efficiency
+
+**Contract Verification:**
+- ✅ **Source Code Verified** on Etherscan
+- ✅ **Deployment Scripts** included (`artifacts/remix-helper.js`)
+- ✅ **Configuration Management** via environment variables
+- ✅ **Comprehensive Testing** with edge case coverage
+
+### Research Innovation
+
+The technical implementation demonstrates advanced **blockchain governance** concepts:
+
+1. **Transparent Distribution**: Immutable audit trail for all subsidy allocations
+2. **Automated Compliance**: Smart contract enforcement of policy rules
+3. **Scalable Architecture**: Batch processing for large-scale government programs
+4. **Security First**: Multiple protection layers against common attack vectors
+5. **User Experience**: Web3 UX approaching traditional web application standards
+
+This technical foundation supports the research objective of demonstrating **blockchain's viability for government subsidy distribution** at scale.
+
+---
+
+## Project Presentation
+
+### Final Year Project Presentation
+📋 **[Download Presentation Slides](presenatationslides.pdf)** *(15.4MB)*
+
+The comprehensive presentation covers:
+- **Research Objectives** and problem statement
+- **System Architecture** with dual-analysis approach
+- **Technical Implementation** details and smart contracts
+- **Multi-Agent RAG System** demonstration
+- **Zero-Knowledge Proofs** for privacy-preserving verification
+- **Blockchain Integration** with Sepolia testnet deployment
+- **Results & Evaluation** of the dual-analysis methodology
+- **Future Work** and MYRC cooperation opportunities
+
+**Presentation Highlights:**
+- Complete system demonstration from concept to deployment
+- Comparative analysis between RAG and formula-based approaches
+- Technical depth showcasing smart contract security features
+- Research contribution to AI governance systems
+
+---
+
 ## Installation & Setup
 
 **Prerequisites:**
