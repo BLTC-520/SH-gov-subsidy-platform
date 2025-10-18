@@ -29,7 +29,7 @@ Key goals:
 
 ---
 
-## Core Features
+## Core Features ✅ COMPLETED
 
 * **Front-end**:
 
@@ -37,12 +37,14 @@ Key goals:
   * TailwindCSS styling and Lucide React icons
   * Role-based pages: Citizen, Admin, ZK Demo
   * Real-time ZK proof display and status badges
+  * Dual-analysis results interface with tabbed views
 
 * **Back-end**:
 
   * Node.js + Express servers for Mock LHDN API and ZK circuit service
   * Supabase for user authentication and database storage
   * Row-Level Security (RLS) ensures users can only access their own profiles
+  * FastAPI smolagents service for multi-agent analysis
 
 * **Zero-Knowledge Proof (ZKP)**:
 
@@ -50,16 +52,23 @@ Key goals:
   * Income classification without revealing exact income
   * Proof verification via backend service
 
-* **Token Distribution (Planned / Minimal Demo)**:
+* **Token Distribution**:
 
-  * ERC20 / claim contract for token issuance
+  * ERC20 contract integration for token issuance (MMYRCToken + SubsidyClaim)
+  * Deployed on Sepolia testnet with Etherscan verification:
+    - **MMYRCToken**: [`0x61B6056de59844cBc3A4eC44963D9619e4914F20`](https://sepolia.etherscan.io/address/0x61B6056de59844cBc3A4eC44963D9619e4914F20)
+    - **SubsidyClaim**: [`0xeF79df53ae0d09b0219da032170Bf9F502d94009`](https://sepolia.etherscan.io/address/0xeF79df53ae0d09b0219da032170Bf9F502d94009)
+  * Blockchain wallet connection and airdrop functionality
   * End-to-end demonstration of claim after ZKP verification
-  * Auditable workflow recorded on blockchain or local testnet
 
-* **Multi-Agent / RAG System (Planned)**:
+* **Multi-Agent RAG System** ✅ **IMPLEMENTED**:
 
-  * AI agents can analyze policy documents and assist eligibility scoring
-  * Supports Retrieval-Augmented Generation for automated decision-making
+  * **Dual-Analysis Architecture**: RAG-based vs Formula-based comparison
+  * **CitizenAnalysisAgent**: AI-powered policy reasoning with context retrieval
+  * **FormulaAnalysisService**: Transparent burden-score calculation
+  * **AnalysisComparator**: Agreement/disagreement detection for governance insights
+  * **ChromaDB Integration**: Semantic search in policy document corpus
+  * **Comprehensive Testing**: Synthetic datasets and comparative analysis validation
 
 ---
 
