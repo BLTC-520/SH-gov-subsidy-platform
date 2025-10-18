@@ -72,26 +72,105 @@ Key goals:
 
 ---
 
-## Architecture
+## Architecture Evolution
 
-![Architecture Diagram](ArchitectureDiagram.png)
+### Initial Design
+![Initial Architecture](assets/InitialAD.png)
+*Original concept showing basic multi-agent RAG integration*
 
-**Key Notes:**
+### Complete Implementation
+![Final Architecture](assets/AD.png)
+*Fully implemented system with dual-analysis architecture*
 
-* ZKP allows users to prove income bracket eligibility **without revealing exact figures**.
-* Mock LHDN API simulates a trusted income source for the proof system.
-* Multi-agent RAG system planned to automate policy scoring (AI integration).
+### Additional System Views
+
+| Component | Diagram | Description |
+|-----------|---------|-------------|
+| **Multi-Agent Flow** | ![Agent Flow](assets/agenticFullFlow.png) | Complete agentic orchestration workflow |
+| **Burden Score Formula** | ![Formula](assets/burden-score-formula.png) | Mathematical burden calculation methodology |
+| **ZK Circuit Design** | ![ZK Circuit](assets/circuitDesignZK.png) | Zero-knowledge proof circuit architecture |
+| **Activity Diagram** | ![Activity](assets/ActivityDiagram.png) | Complete user interaction flow |
+| **ZK Architecture** | ![ZK Arch](frontend/public/assets/zkArch.png) | Zero-knowledge system design |
+
+**Key Implementation Notes:**
+
+* **Zero-Knowledge Proofs**: Enable income bracket verification without revealing exact figures using Groth16 SNARKs
+* **Dual-Analysis Architecture**: RAG-based flexible reasoning vs Formula-based transparent calculations
+* **State-Aware Burden Calculation**: Uses real HIES data with state-specific income equivalents and median burden values
+* **Multi-Agent RAG System**: ChromaDB semantic search with LiteLLM model integration for policy reasoning
 
 ---
 
-## Demo Flow
+## Demo Flow ✅ COMPLETED
 
 1. **Register / Login** using Supabase Auth
 2. **Fill Profile** (name, date of birth, gender, wallet address, household info)
 3. **IC Verification** → Backend retrieves income data from Mock LHDN
-4. **ZK Proof Generation** → Generates proof for income bracket (e.g., B1-T2)
-5. **View Eligibility** → Verified bracket shown in front-end without revealing actual income
-6. **Token Claim (Demo)** → Send claim transaction to local/testnet contract (optional)
+4. **ZK Proof Generation** → Generates proof for income bracket (e.g., B40/M40-M1)
+5. **Multi-Agent Analysis** → Dual analysis using both RAG and formula-based approaches
+6. **View Results** → Tabbed interface showing comparison, RAG reasoning, and formula breakdown
+7. **Token Claim** → Connect wallet and claim tokens after eligibility verification
+
+---
+
+## Burden Score Formula Implementation
+
+### Mathematical Foundation
+
+The system implements a sophisticated **state-aware burden calculation** using real Malaysian HIES (Household Income and Expenditure Survey) data:
+
+#### Core Formula
+```
+Final Score = min(100, (0.75 × Burden Score + 0.25 × Documentation Score) + Base Score)
+```
+
+#### Key Components
+
+1. **Adult Equivalent (AE) Calculation**
+   ```
+   AE = 1 + 0.5 × (Adults - 1) + 0.3 × Children
+   ```
+
+2. **Applicant Burden**
+   ```
+   Applicant Burden = AE / Equivalent Income
+   ```
+
+3. **Burden Ratio (State-Relative)**
+   ```
+   Burden Ratio = Applicant Burden / State Median Burden
+   ```
+
+4. **Piecewise Burden Scoring**
+   - BR ≤ 1.0 → 50 points (below state median)
+   - 1.0 < BR ≤ 1.2 → 70 points (moderately above)
+   - 1.2 < BR ≤ 1.5 → 90 points (significantly above)
+   - BR > 1.5 → 100 points (much higher than median)
+
+#### Implementation Files
+
+- **Backend Logic**: `backend/smolagents-service/tools/eligibility_score_tool.py`
+- **Frontend Calculations**: `frontend/src/utils/formulaCalculations.ts`
+- **Documentation**: `backend/smolagents-service/docs/complete_scoring_process.md`
+
+#### State-Specific Data
+
+| State | Median Burden | Economic Context |
+|-------|---------------|------------------|
+| W.P. Kuala Lumpur | 0.000263 | Capital (richest) |
+| Selangor | 0.000284 | Industrial hub |
+| Johor | 0.000403 | Manufacturing center |
+| Kedah | 0.000458 | Agricultural state |
+| Kelantan | 0.000558 | Rural (poorest) |
+
+*Complete state data available in `backend/smolagents-service/docs/data_cleaning/hies_cleaned_state_percentile.csv`*
+
+#### Research Validation
+
+The dual-analysis architecture demonstrates:
+- **Formula-based**: Transparent, auditable mathematical calculations
+- **RAG-based**: Contextual policy reasoning with semantic document retrieval
+- **Comparison Analysis**: Agreement/disagreement detection for governance insights
 
 ---
 
@@ -134,9 +213,13 @@ root -> ./startallservices.sh
 
 ## Future Work
 
-* Integrate AI / RAG for automatic policy analysis and eligibility scoring
-* Expand blockchain integration for real-world auditable token distribution (will use Foundry)
-* Deploy system for real scholarship / subsidy pilot projects
+**All core development completed. Future enhancements focus on real-world deployment:**
+
+* **Real Data Integration**: Replace mock LHDN API with actual government data sources
+* **MYRC Cooperation**: Integrate with Malaysian government systems (MyKad, e-Kasih, BR1M databases)
+* **Production Deployment**: Scale system for real scholarship/subsidy distribution programs
+* **Enhanced Security**: Add advanced encryption, audit trails, and compliance features
+* **Multi-Agency Support**: Extend to support multiple government agencies and policy frameworks
 
 ---
 
